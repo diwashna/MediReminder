@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic page setup and title -->
+    <meta charset="UTF-8">
+    <title>Edit Medication</title>
+
+    <!-- Internal styles for layout and aesthetics -->
+    <style>
+        /* General body styling */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #ffe6f0, #fff0f5);
+            margin: 0;
+            padding: 50px 20px;
+            color: #444;
+        }
+
+        /* Centered container for form */
+        .container {
+            max-width: 550px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+        }
+
+        /* Page title styling */
+        h2 {
+            text-align: center;
+            color: #c71585;
+            margin-bottom: 30px;
+        }
+
+        /* Labels for inputs */
+        label {
+            font-weight: bold;
+            color: #c71585;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 6px;
+        }
+
+        /* Form input, dropdown, and textarea styling */
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #f3c0d3;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        /* Save button styling */
+        .button {
+            margin-top: 30px;
+            background-color: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+        }
+
+        /* Hover effect for save button */
+        .button:hover {
+            background-color: #ff3e94;
+        }
+
+        /* Back link styling */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            text-decoration: none;
+            color: #c71585;
+            font-weight: bold;
+        }
+
+        /* Hover effect for back link */
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main content container -->
+    <div class="container">
+        <!-- Heading showing the name of medication being edited -->
+        <h2>✏️ Edit {{ medication.medication }}</h2>
+
+        <!-- Form to update medication data -->
+        <form method="POST">
+            <!-- Frequency dropdown with preselected value -->
+            <label for="frequency">Frequency</label>
+            <select name="frequency" id="frequency" required>
+                <option value="once_a_day" {% if medication.frequency == 'once_a_day' %}selected{% endif %}>Once a day</option>
+                <option value="twice_a_day" {% if medication.frequency == 'twice_a_day' %}selected{% endif %}>Twice a day</option>
+                <option value="three_times_a_day" {% if medication.frequency == 'three_times_a_day' %}selected{% endif %}>Three times a day</option>
+                <option value="every_6_hours" {% if medication.frequency == 'every_6_hours' %}selected{% endif %}>Every 6 hours</option>
+                <option value="every_8_hours" {% if medication.frequency == 'every_8_hours' %}selected{% endif %}>Every 8 hours</option>
+                <option value="every_other_day" {% if medication.frequency == 'every_other_day' %}selected{% endif %}>Every other day</option>
+                <option value="weekly" {% if medication.frequency == 'weekly' %}selected{% endif %}>Weekly</option>
+            </select>
+
+            <!-- Dosage input field -->
+            <label for="dosage">Dosage</label>
+            <input type="text" name="dosage" placeholder="Dosage" required>
+
+            <!-- Start date field pre-filled with existing value -->
+            <label for="start_date">Start Date</label>
+            <input type="date" name="start_date" id="start_date" value="{{ medication.start_date }}" required>
+
+            <!-- Notes input area, pre-filled if notes exist -->
+            <label for="notes">Notes</label>
+            <textarea name="notes" rows="4" placeholder="Notes or instructions...">{{ medication.notes }}</textarea>
+
+            <!-- Submit button -->
+            <button type="submit" class="button">💾 Update Medication</button>
+        </form>
+
+        <!-- Back link to medication tracking page -->
+        <a href="{{ url_for('track_medications') }}" class="back-link">← Back to Medications</a>
+    </div>
+</body>
+</html>

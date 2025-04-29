@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Medication Report</title>
+
+    <!-- Styling for the medication report page -->
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 40px;
+            background: linear-gradient(to right, #ffe6f0, #fff0f5);
+            color: #333;
+        }
+
+        h1 {
+            color: #c71585;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* List styles for displaying medications */
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        li {
+            background: #fff0f6;
+            margin-bottom: 15px;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        }
+
+        strong {
+            color: #c71585;
+        }
+
+        /* Button and link styles */
+        .button, button {
+            background-color: #ff69b4;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover, button:hover {
+            background-color: #ff3e94;
+        }
+
+        /* Flash message styling for success and error */
+        .flash-message {
+            padding: 12px 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            max-width: 80%;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .flash-message.success {
+            background-color: #d1f7c4;
+            color: #256029;
+            border: 1px solid #9fe6a0;
+        }
+
+        .flash-message.danger {
+            background-color: #ffd6d6;
+            color: #7f1d1d;
+            border: 1px solid #ffaaaa;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Display flash messages if any -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Report header -->
+    <h1>Medication Report for {{ user.first_name }} {{ user.last_name }}</h1>
+
+    <!-- Display list of medications if available -->
+    {% if medications %}
+        <ul>
+            {% for med in medications %}
+                <li>
+                    <strong>Name:</strong> {{ med.medication }}<br>
+                    <strong>Frequency:</strong> {{ med.frequency }}<br>
+                    <strong>Start Date:</strong> {{ med.start_date }}<br>
+                    <strong>Next Dose:</strong> {{ med.next_dose }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <!-- Message if no medications exist -->
+        <p style="text-align:center;">No medications found.</p>
+    {% endif %}
+
+    <!-- Action buttons for emailing and downloading the report -->
+    <div class="actions">
+        <form action="{{ url_for('send_to_provider') }}" method="POST" style="display:inline;">
+            <button type="submit">📧 Send to Healthcare Provider</button>
+        </form>
+        <br><br>
+        <a href="{{ url_for('download_report') }}" class="button">📄 Download Report as PDF</a>
+        <br><br>
+        <a href="{{ url_for('dashboard') }}" class="button">⬅ Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

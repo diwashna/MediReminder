@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Set character encoding and responsive design -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medication Tracker</title>
+    
+    <!-- Link to external stylesheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+    <style>
+        /* Page base styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Main container styling */
+        .container {
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 40px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* Heading spacing */
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        /* Form layout */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Input, select, and button styling */
+        input, select, button {
+            padding: 12px;
+            width: 100%;
+            max-width: 400px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        /* Submit button base style */
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Button hover state */
+        button:hover {
+            background-color: #0069d9;
+        }
+
+        /* Navigation link container */
+        .nav-links {
+            margin-top: 20px;
+        }
+
+        /* Styling for navigation links */
+        .nav-links a {
+            margin: 0 10px;
+            color: #555;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Message color styles */
+        .success {
+            color: green;
+        }
+
+        .danger {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Main wrapper for form content -->
+    <div class="container">
+        <h2>Track a New Medication</h2>
+
+        <!-- Display flashed messages like success or error -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <p class="{{ category }}">{{ message }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Medication tracking form -->
+        <form action="{{ url_for('medications') }}" method="post">
+            <input type="text" name="medication" placeholder="Medication name" required>
+
+            <!-- Dropdown for frequency -->
+            <select name="frequency" required>
+                <option value="">Select frequency</option>
+                <option value="once_a_day">Once a day</option>
+                <option value="twice_a_day">Twice a day</option>
+                <option value="three_times_a_day">Three times a day</option>
+                <option value="every_6_hours">Every 6 hours</option>
+                <option value="every_8_hours">Every 8 hours</option>
+                <option value="every_other_day">Every other day</option>
+                <option value="weekly">Once a week</option>
+                <option value="custom">Custom interval</option>
+            </select>
+
+            <!-- Custom interval input (hidden by default) -->
+            <div id="custom-interval-container" style="display: none;">
+                <input type="number" name="custom_interval_days" placeholder="Every X days" min="1">
+            </div>
+
+            <!-- Date input -->
+            <label for="start_date">Start Date:</label>
+            <input type="date" name="start_date" required>
+
+            <!-- Submit button -->
+            <button type="submit">Add Medication</button>
+        </form>
+
+        <!-- Navigation links back to dashboard or logout -->
+        <div class="nav-links">
+            <a href="{{ url_for('dashboard') }}">Back to Dashboard</a> |
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+</body>
+
+<!-- JavaScript to show/hide custom interval input based on selection -->
+<script>
+    const frequencySelect = document.querySelector('select[name="frequency"]');
+    const customContainer = document.getElementById('custom-interval-container');
+
+    frequencySelect.addEventListener('change', function () {
+        if (this.value === 'custom') {
+            customContainer.style.display = 'block';
+        } else {
+            customContainer.style.display = 'none';
+        }
+    });
+</script>
+</html>
